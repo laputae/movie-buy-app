@@ -154,15 +154,17 @@ public class MovieSystem {
             switch (command){
                 case "1":
                     // 展示全部排片信息
-
+                    showAllMovies();
                     break;
                 case "2":
+
                     break;
                 case "3":
                     // 评分功能
                     break;
                 case "4":
                     // 购票功能
+                    buyMovie();
                     break;
                 case "5":
                     return; // 干掉方法
@@ -172,9 +174,84 @@ public class MovieSystem {
             }
         }
     }
-    /**
-     * 展示商家的界面
-     */
+
+    // 买票
+    private static void buyMovie() {
+        showAllMovies();
+        System.out.println("---------用户购票功能---------");
+        while (true) {
+            System.out.println("请输入买票的门店");
+            String shopName=SYS_SC.nextLine();
+            Business business=getBusinessByShopName(shopName);
+            if(business==null){
+                System.out.println("对不起，没有该店铺");
+            } else {
+                List<Movie> movies=ALL_MOVIES.get(business);
+                if(movies.size()>0){
+                    // 选片
+                    while (true) {
+                        System.out.println("请您输入需要购买的电影名称");
+                        String movieName=SYS_SC.nextLine();
+                        Movie movie=getMovieByShopNameAndMovieName(movies,movieName);
+                        if(movie!=null){
+                            // 开始购票并且判断是否有余票
+                            System.out.println("请输入要购买的票数");
+                            String number=SYS_SC.nextLine();
+                            if(Integer.valueOf(number)<=movie.getNumber()){
+
+                            }
+                        } else {
+                            System.out.println("电影名称有误");
+                        }
+                    }
+                } else{
+                    System.out.println("此店铺没有电影，是否继续买票，y/n");
+                    String op=SYS_SC.nextLine();
+                    if(!op.equals("y"))return;
+                }
+            }
+        }
+    }
+
+    private static Movie getMovieByShopNameAndMovieName(List<Movie> movies, String movieName) {
+        for(Movie movie:movies){
+            if(movie.getName().contains(movieName)){
+                return movie;
+            }
+        }
+        return null;
+    }
+
+    // 根据商家名称查找商家对象
+    private static Business getBusinessByShopName(String shopName) {
+        Set<Business> businesses = ALL_MOVIES.keySet();
+        for(Business business:businesses){
+            if(business.getShopName().contains(shopName)){
+                return business;
+            }
+        }
+        return null;
+    }
+
+
+     // 展示所有商家的电影排片信息
+    private static void showAllMovies() {
+        System.out.println("-------展示所有商家排片信息-------");
+        ALL_MOVIES.forEach((business, movies) -> {
+            System.out.println(business.getShopName() + "\t\t电话" + business.getPhone() + "\t\t地址" + business.getAddress());
+            System.out.println("片名\t\t\t主演\t\t\t时长\t\t\t评分\t\t\t票价\t\t\t余票数量\t\t\t放映时间");
+
+            if (movies.size() > 0) {
+                for (Movie movie : movies) {
+                    System.out.println(movie.getName() + "\t\t\t" + movie.getActor() + "\t\t" + movie.getTime()
+                            + "\t\t" + movie.getScore() + "\t\t" + movie.getPrice() + "\t\t" + movie.getNumber() + "\t\t"
+                            + sdf.format(movie.getStartTime()));
+                }
+            }
+        });
+    }
+
+    // 展示商家的界面
     private static void showBusinessMain() {
         while (true) {
             System.out.println("============黑马电影商家界面===================");
@@ -214,9 +291,7 @@ public class MovieSystem {
         }
     }
 
-    /**
-     * 下架影片
-     */
+    // 下架影片
     private static void deleteMovie() {
         System.out.println("-------下架电影-------");
         Business business=(Business)loginUser;
@@ -238,10 +313,7 @@ public class MovieSystem {
                 System.out.println("您的店铺没有这个电影，下架失败");
                 System.out.println("请问继续下架吗？y/n");
                 String command = SYS_SC.nextLine();
-                switch (command) {
-                    case "y":
-                        break;
-                    default:
+                if(!command.equals("y")){
                         System.out.println("好的！");
                         return;
                 }
@@ -249,9 +321,7 @@ public class MovieSystem {
         }
     }
 
-    /**
-     * 更新电影信息
-     */
+    // 更新电影信息
     private static void uodateMovie() {
         System.out.println("-------修改电影信息-------");
         Business business=(Business)loginUser;
@@ -309,9 +379,7 @@ public class MovieSystem {
         }
     }
 
-    /**
-     * 添加电影
-     */
+    // 添加电影
     private static void addMovie() {
         System.out.println("-------上架电影-------");
         Business business=(Business)loginUser;
