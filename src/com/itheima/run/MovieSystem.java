@@ -159,7 +159,7 @@ public class MovieSystem {
                     showAllMovies();
                     break;
                 case "2":
-
+                    // 查询电影信息
                     break;
                 case "3":
                     // 评分功能
