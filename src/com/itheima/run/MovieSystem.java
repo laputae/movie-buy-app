@@ -5,10 +5,7 @@ import com.itheima.bean.Customer;
 import com.itheima.bean.Movie;
 import com.itheima.bean.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MovieSystem {
     /**
@@ -66,7 +63,85 @@ public class MovieSystem {
         List<Movie> movies2 = new ArrayList<>();
         ALL_MOVIES.put(b2 , movies2); // b2 = []
     }
+    public static final Scanner SYS_SC=new Scanner(System.in);
     public static void main(String[] args) {
         ALL_USERS;
+    }
+
+    /**
+     * 首页
+     */
+    public void showMain(){
+        while (true) {
+            System.out.println("-----黑马电影首页-----");
+            System.out.println("1、登录");
+            System.out.println("2、用户注册");
+            System.out.println("3、商家注册");
+            System.out.println("请输入操作命令：");
+            String command=SYS_SC.nextLine();
+            switch(command){
+                case "1":
+                    // 登录
+                    login();
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    break;
+                default:
+                    System.out.println("命令有误，请重新输入！");
+            }
+        }
+    }
+    private static void login(){
+        while (true) {
+            System.out.println("请输入用户名：");
+            String loginName=SYS_SC.nextLine();
+            System.out.println("请输入密码：");
+            String loginPassword=SYS_SC.nextLine();
+            // 1、根据用户名查询用户对象
+            User u=getUserByloginName(loginName);
+            // 2、判断用户对象是否存在
+            if(u!=null){
+                // 3、比对密码是否正确
+                if(u.getPassword().equals(loginPassword)){
+                    // 4、登录成功
+                    // 5、判断用户的真实类型是商家还是顾客
+                    if(u instanceof Customer){
+                        // 当前登录的是顾客
+                        showCustomerMain();
+                    } else {
+                        // 当前登录的是商家
+                        showBusinessMain();
+                    }
+                    return;
+                } else {
+                    System.out.println("密码错误");
+                }
+            } else {
+                System.out.println("用户名错误，请重新输入");
+            }
+        }
+    }
+
+    /**
+     * 展示商家的界面
+     */
+    private static void showBusinessMain() {
+    }
+
+    /**
+     * 展示顾客的界面
+     */
+    private static void showCustomerMain() {
+    }
+
+    public static User getUserByloginName(String loginName){
+        for(User user:ALL_USERS){
+            if(loginName.equals(user.getLoginName())){
+                return user;
+            }
+        }
+        return null;    //查无此用户
     }
 }
