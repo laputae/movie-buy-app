@@ -170,7 +170,8 @@ public class MovieSystem {
                     buyMovie();
                     break;
                 case "5":
-                    return; // 干掉方法
+                    // 干掉方法
+                    return;
                 default:
                     System.out.println("不存在该命令！！");
                     break;
