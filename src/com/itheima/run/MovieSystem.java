@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -195,10 +197,26 @@ public class MovieSystem {
                         Movie movie=getMovieByShopNameAndMovieName(movies,movieName);
                         if(movie!=null){
                             // 开始购票并且判断是否有余票
-                            System.out.println("请输入要购买的票数");
-                            String number=SYS_SC.nextLine();
-                            if(Integer.valueOf(number)<=movie.getNumber()){
-
+                            while (true) {
+                                System.out.println("请输入要购买的票数");
+                                String number=SYS_SC.nextLine();
+                                int buyNumber=Integer.valueOf(number);
+                                if(buyNumber<=movie.getNumber()){
+                                    double money= BigDecimal.valueOf(movie.getPrice()).multiply(BigDecimal.valueOf(buyNumber)).doubleValue();
+                                    if(money<=loginUser.getMoney()){
+                                    movie.setNumber(movie.getNumber()-buyNumber);
+                                    System.out.println("购票成功，您买了"+movie.getName()+"，您买了"+buyNumber+"张票");
+                                    } else {
+                                        System.out.println("钱不够，是否继续买票，y/n");
+                                        String op=SYS_SC.nextLine();
+                                        if(!op.equals("y"))return;
+                                    }
+                                } else{
+                                    System.out.println("票数不够，当前最多可以买"+movie.getNumber()+"张电影票");
+                                    System.out.println("是否继续买票，y/n");
+                                    String op=SYS_SC.nextLine();
+                                    if(!op.equals("y"))return;
+                                }
                             }
                         } else {
                             System.out.println("电影名称有误");
