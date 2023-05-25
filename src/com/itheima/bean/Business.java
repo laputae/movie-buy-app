@@ -1,5 +1,8 @@
 package com.itheima.bean;
 
+/**
+ * 店铺类
+ */
 public class Business extends User{
     private String shopName;
     private String address;
