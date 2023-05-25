@@ -6,9 +6,11 @@ import com.itheima.bean.Movie;
 import com.itheima.bean.User;
 import org.slf4j.LoggerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class MovieSystem {
     // 定义一个静态的User变量保存当前登录的用户
@@ -192,12 +194,15 @@ public class MovieSystem {
                     break;
                 case "2":
                     // 上架电影信息
+                    addMovie();
                     break;
                 case "3":
                     // 下架电影信息
+                    deleteMovie();
                     break;
                 case "4":
                     // 修改电影信息
+                    uodateMovie();
                     break;
                 case "5":
                     System.out.println(loginUser.getUserName() +"请您下次再来啊~~~");
@@ -205,6 +210,72 @@ public class MovieSystem {
                 default:
                     System.out.println("不存在该命令！！");
                     break;
+            }
+        }
+    }
+
+    /**
+     * 下架影片
+     */
+    private static void deleteMovie() {
+        System.out.println("-------下架电影-------");
+        Business business=(Business)loginUser;
+        List<Movie> movies=ALL_MOVIES.get(business);
+        if(movies.size()==0){
+            System.out.println("当前没有电影可以下架");
+            return;
+        }
+        System.out.println("请输入需要下架的电影名称");
+        String movieName=SYS_SC.nextLine();
+        // 查询是否存在这个影片对象
+        Movie movie=getMovieByName(movieName);
+        if(movie!=null){
+            movies.remove(movie);
+        } else {
+            System.out.println("您的店铺没有这个电影，下架失败");
+        }
+    }
+
+    /**
+     * 更新电影信息
+     */
+    private static void uodateMovie() {
+
+    }
+
+    /**
+     * 添加电影
+     */
+    private static void addMovie() {
+        System.out.println("-------上架电影-------");
+        Business business=(Business)loginUser;
+        List<Movie> movies=ALL_MOVIES.get(business);
+        System.out.println("================上架电影====================");
+        // 根据商家对象(就是登录的用户loginUser)，作为Map集合的键 提取对应的值就是其排片信息 ：Map<Business , List<Movie>> ALL_MOVIES
+
+
+        System.out.println("请您输入新片名：");
+        String name  = SYS_SC.nextLine();
+        System.out.println("请您输入主演：");
+        String actor  = SYS_SC.nextLine();
+        System.out.println("请您输入时长：");
+        String time  = SYS_SC.nextLine();
+        System.out.println("请您输入票价：");
+        String price  = SYS_SC.nextLine();
+        System.out.println("请您输入票数：");
+        String totalNumber  = SYS_SC.nextLine(); // 200\n
+        while (true) {
+            try {
+                System.out.println("请您输入影片放映时间：");
+                String stime  = SYS_SC.nextLine();
+                Movie movie = new Movie(name, actor ,Double.valueOf(time) , Double.valueOf(price),
+                        Integer.valueOf(totalNumber) ,  sdf.parse(stime));
+                movies.add(movie);
+                System.out.println("您已经成功上架了：《" + movie.getName() + "》");
+                return; // 直接退出去
+            } catch (ParseException e) {
+                e.printStackTrace();
+                LOGGER.error("时间解析出了毛病");
             }
         }
     }
@@ -232,12 +303,31 @@ public class MovieSystem {
     }
 
 
-    public static User getUserByloginName(String loginName){
+    private static User getUserByloginName(String loginName){
         for(User user:ALL_USERS){
             if(loginName.equals(user.getLoginName())){
                 return user;
             }
         }
         return null;    //查无此用户
+    }
+
+    /**
+     * 根据电影名字查找电影
+     * @param movieName
+     * @return
+     */
+    private static Movie getMovieByName(String movieName){
+        Business business=(Business)loginUser;
+        List<Movie> movies=ALL_MOVIES.get(business);
+        if(movies.size()==0)
+            return null;
+
+        for(int i=movies.size()-1; i>=0; i--){
+            if(movies.get(i).getName().contains(movieName)){
+                return movies.get(i);
+            }
+        }
+        return null;
     }
 }
