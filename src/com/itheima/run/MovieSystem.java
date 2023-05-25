@@ -163,6 +163,7 @@ public class MovieSystem {
                     break;
                 case "3":
                     // 评分功能
+                    score();
                     break;
                 case "4":
                     // 购票功能
@@ -175,6 +176,11 @@ public class MovieSystem {
                     break;
             }
         }
+    }
+
+    // 评分
+    private static void score() {
+
     }
 
     // 买票
@@ -204,8 +210,11 @@ public class MovieSystem {
                                 if(buyNumber<=movie.getNumber()){
                                     double money= BigDecimal.valueOf(movie.getPrice()).multiply(BigDecimal.valueOf(buyNumber)).doubleValue();
                                     if(money<=loginUser.getMoney()){
-                                    movie.setNumber(movie.getNumber()-buyNumber);
                                     System.out.println("购票成功，您买了"+movie.getName()+"，您买了"+buyNumber+"张票");
+                                    movie.setNumber(movie.getNumber()-buyNumber);
+                                    loginUser.setMoney(loginUser.getMoney()-money);
+                                    business.setMoney(business.getMoney()+money);
+                                    return;
                                     } else {
                                         System.out.println("钱不够，是否继续买票，y/n");
                                         String op=SYS_SC.nextLine();
@@ -439,7 +448,7 @@ public class MovieSystem {
         // 根据商家对象提取对应的值，商家对象作为键
         List<Movie> movies=ALL_MOVIES.get(loginUser);
         Business business=(Business)loginUser;
-        System.out.println(business.getShopName()+"\t\t电话"+business.getPhone()+"\t\t地址"+business.getAddress());
+        System.out.println(business.getShopName()+"\t\t电话"+business.getPhone()+"\t\t地址"+business.getAddress()+"\t\t余额"+business.getMoney());
         System.out.println("片名\t\t\t主演\t\t\t时长\t\t\t评分\t\t\t票价\t\t\t余票数量\t\t\t放映时间");
 
         if (movies.size()>0) {
