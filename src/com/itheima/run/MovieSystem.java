@@ -4,10 +4,17 @@ import com.itheima.bean.Business;
 import com.itheima.bean.Customer;
 import com.itheima.bean.Movie;
 import com.itheima.bean.User;
+import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class MovieSystem {
+    // 定义一个静态的User变量保存当前登录的用户
+    public static User loginUser;
+    public static SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    public static final Logger LOGGER= (Logger) LoggerFactory.getLogger("MovieSystem.class");
     /**
      * 1、定义存储用户数据的容器
      */
@@ -65,13 +72,13 @@ public class MovieSystem {
     }
     public static final Scanner SYS_SC=new Scanner(System.in);
     public static void main(String[] args) {
-        ALL_USERS;
+        showMain();
     }
 
     /**
      * 首页
      */
-    public void showMain(){
+    public static void showMain(){
         while (true) {
             System.out.println("-----黑马电影首页-----");
             System.out.println("1、登录");
@@ -105,7 +112,9 @@ public class MovieSystem {
             if(u!=null){
                 // 3、比对密码是否正确
                 if(u.getPassword().equals(loginPassword)){
-                    // 4、登录成功
+                    // 4、登录成功，记住登录成功的用户
+                    loginUser=u;
+                    LOGGER.info(u.getLoginName()+"登录系统");
                     // 5、判断用户的真实类型是商家还是顾客
                     if(u instanceof Customer){
                         // 当前登录的是顾客
@@ -125,16 +134,103 @@ public class MovieSystem {
     }
 
     /**
-     * 展示商家的界面
-     */
-    private static void showBusinessMain() {
-    }
-
-    /**
      * 展示顾客的界面
      */
     private static void showCustomerMain() {
+        while (true) {
+            System.out.println("============黑马电影客户界面===================");
+            System.out.println(loginUser.getUserName() + (loginUser.getSex()=='男'? "先生":"女士" + "欢迎您进入系统" +
+                    "\t余额：" + loginUser.getMoney()));
+            System.out.println("请您选择要操作的功能：");
+            System.out.println("1、展示全部影片信息功能:");
+            System.out.println("2、根据电影名称查询电影信息:");
+            System.out.println("3、评分功能:");
+            System.out.println("4、购票功能:");
+            System.out.println("5、退出系统:");
+            System.out.println("请输入您要操作的命令：");
+            String command = SYS_SC.nextLine();
+            switch (command){
+                case "1":
+                    // 展示全部排片信息
+
+                    break;
+                case "2":
+                    break;
+                case "3":
+                    // 评分功能
+                    break;
+                case "4":
+                    // 购票功能
+                    break;
+                case "5":
+                    return; // 干掉方法
+                default:
+                    System.out.println("不存在该命令！！");
+                    break;
+            }
+        }
     }
+    /**
+     * 展示商家的界面
+     */
+    private static void showBusinessMain() {
+        while (true) {
+            System.out.println("============黑马电影商家界面===================");
+            System.out.println(loginUser.getUserName() + (loginUser.getSex()=='男'? "先生":"女士" + "欢迎您进入系统"));
+            System.out.println("1、展示详情:");
+            System.out.println("2、上架电影:");
+            System.out.println("3、下架电影:");
+            System.out.println("4、修改电影:");
+            System.out.println("5、退出:");
+
+            System.out.println("请输入您要操作的命令：");
+            String command = SYS_SC.nextLine();
+            switch (command){
+                case "1":
+                    // 展示全部排片信息
+                    showBusinessInfo();
+                    break;
+                case "2":
+                    // 上架电影信息
+                    break;
+                case "3":
+                    // 下架电影信息
+                    break;
+                case "4":
+                    // 修改电影信息
+                    break;
+                case "5":
+                    System.out.println(loginUser.getUserName() +"请您下次再来啊~~~");
+                    return; // 干掉方法
+                default:
+                    System.out.println("不存在该命令！！");
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 展示当前商家的详细信息
+     */
+    private static void showBusinessInfo() {
+        System.out.println("--------商家详情界面--------");
+        // 根据商家对象提取对应的值，商家对象作为键
+        List<Movie> movies=ALL_MOVIES.get(loginUser);
+        Business business=(Business)loginUser;
+        System.out.println(business.getShopName()+"\t\t电话"+business.getPhone()+"\t\t地址"+business.getAddress());
+        System.out.println("片名\t\t\t主演\t\t\t时长\t\t\t评分\t\t\t票价\t\t\t余票数量\t\t\t放映时间");
+
+        if (movies.size()>0) {
+            for (Movie movie : movies) {
+                System.out.println(movie.getName()+"\t\t\t" + movie.getActor()+ "\t\t" + movie.getTime()
+                        + "\t\t" + movie.getScore() + "\t\t" + movie.getPrice() + "\t\t" + movie.getNumber() + "\t\t"
+                        +   sdf.format(movie.getStartTime()));
+        }
+            } else {
+                System.out.println("您的店铺当前无片可播");
+            }
+    }
+
 
     public static User getUserByloginName(String loginName){
         for(User user:ALL_USERS){
