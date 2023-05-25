@@ -225,14 +225,27 @@ public class MovieSystem {
             System.out.println("当前没有电影可以下架");
             return;
         }
-        System.out.println("请输入需要下架的电影名称");
-        String movieName=SYS_SC.nextLine();
-        // 查询是否存在这个影片对象
-        Movie movie=getMovieByName(movieName);
-        if(movie!=null){
-            movies.remove(movie);
-        } else {
-            System.out.println("您的店铺没有这个电影，下架失败");
+        while (true) {
+            System.out.println("请输入需要下架的电影名称");
+            String movieName=SYS_SC.nextLine();
+            // 查询是否存在这个影片对象
+            Movie movie=getMovieByName(movieName);
+            if(movie!=null){
+                movies.remove(movie);
+                System.out.println("您的店铺成功下架电影："+movie.getName());
+                showBusinessInfo();
+            } else {
+                System.out.println("您的店铺没有这个电影，下架失败");
+                System.out.println("请问继续下架吗？y/n");
+                String command = SYS_SC.nextLine();
+                switch (command) {
+                    case "y":
+                        break;
+                    default:
+                        System.out.println("好的！");
+                        return;
+                }
+            }
         }
     }
 
@@ -240,7 +253,60 @@ public class MovieSystem {
      * 更新电影信息
      */
     private static void uodateMovie() {
-
+        System.out.println("-------修改电影信息-------");
+        Business business=(Business)loginUser;
+        List<Movie> movies=ALL_MOVIES.get(business);
+        if(movies.size()==0){
+            System.out.println("当前没有电影可以修改");
+            return;
+        }
+        while (true) {
+            System.out.println("请输入需要修改的电影名称");
+            String movieName=SYS_SC.nextLine();
+            // 查询是否存在这个影片对象
+            Movie movie=getMovieByName(movieName);
+            if(movie!=null){
+                System.out.println("请您输入修改后的片名：");
+                String name  = SYS_SC.nextLine();
+                System.out.println("请您输入修改后的主演：");
+                String actor  = SYS_SC.nextLine();
+                System.out.println("请您输入修改后的时长：");
+                String time  = SYS_SC.nextLine();
+                System.out.println("请您输入修改后的票价：");
+                String price  = SYS_SC.nextLine();
+                System.out.println("请您输入修改后的票数：");
+                String totalNumber  = SYS_SC.nextLine();
+                while(true){
+                    try{
+                        System.out.println("请您输入修改后的影片放映时间：");
+                        String stime  = SYS_SC.nextLine();
+                        movie.setName(name);
+                        movie.setActor(actor);
+                        movie.setTime(Double.valueOf(time));
+                        movie.setPrice(Double.valueOf(price));
+                        movie.setNumber(Integer.valueOf(totalNumber));
+                        movie.setStartTime(sdf.parse(stime));
+                        System.out.println("您成功修改了电影："+movie.getName()+"的信息");
+                        showBusinessInfo();
+                        return;
+                    } catch (ParseException e) {
+                            e.printStackTrace();
+                            LOGGER.error("时间解析出了毛病");
+                        }
+                }
+            } else {
+                System.out.println("您的店铺没有这个电影，修改失败");
+                System.out.println("请问继续修改吗？y/n");
+                String command = SYS_SC.nextLine();
+                switch (command) {
+                    case "y":
+                        break;
+                    default:
+                        System.out.println("好的！");
+                        return;
+                }
+            }
+        }
     }
 
     /**
@@ -253,8 +319,7 @@ public class MovieSystem {
         System.out.println("================上架电影====================");
         // 根据商家对象(就是登录的用户loginUser)，作为Map集合的键 提取对应的值就是其排片信息 ：Map<Business , List<Movie>> ALL_MOVIES
 
-
-        System.out.println("请您输入新片名：");
+        System.out.println("请您输入片名：");
         String name  = SYS_SC.nextLine();
         System.out.println("请您输入主演：");
         String actor  = SYS_SC.nextLine();
@@ -263,7 +328,7 @@ public class MovieSystem {
         System.out.println("请您输入票价：");
         String price  = SYS_SC.nextLine();
         System.out.println("请您输入票数：");
-        String totalNumber  = SYS_SC.nextLine(); // 200\n
+        String totalNumber  = SYS_SC.nextLine();
         while (true) {
             try {
                 System.out.println("请您输入影片放映时间：");
