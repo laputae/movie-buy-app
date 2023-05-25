@@ -20,37 +20,37 @@ public class MovieSystem {
     private static Map<Business, List<Movie>> ALL_MOVIES=new HashMap<>();
     // 4、准备一些测试数据
     static {
-        Customer c = new Customer();
-        c.setLoginName("zyf888");
-        c.setPassWord("123456");
-        c.setUserName("黑马刘德华");
-        c.setSex('男');
-        c.setMoney(10000);
-        c.setPhone("110110");
-        ALL_USERS.add(c);
-
         Customer c1 = new Customer();
-        c1.setLoginName("gzl888");
+        c1.setLoginName("zyf888");
         c1.setPassWord("123456");
-        c1.setUserName("黑马关之琳");
-        c1.setSex('女');
-        c1.setMoney(2000);
-        c1.setPhone("111111");
+        c1.setUserName("黑马刘德华");
+        c1.setSex('男');
+        c1.setMoney(10000);
+        c1.setPhone("110110");
         ALL_USERS.add(c1);
 
-        Business b = new Business();
-        b.setLoginName("baozugong888");
-        b.setPassWord("123456");
-        b.setUserName("黑马包租公");
-        b.setMoney(0);
-        b.setSex('男');
-        b.setPhone("110110");
-        b.setAddress("火星6号2B二层");
-        b.setShopName("甜甜圈国际影城");
-        ALL_USERS.add(b);
+        Customer c2 = new Customer();
+        c2.setLoginName("gzl888");
+        c2.setPassWord("123456");
+        c2.setUserName("黑马关之琳");
+        c2.setSex('女');
+        c2.setMoney(2000);
+        c2.setPhone("111111");
+        ALL_USERS.add(c2);
+
+        Business b1 = new Business();
+        b1.setLoginName("baozugong888");
+        b1.setPassWord("123456");
+        b1.setUserName("黑马包租公");
+        b1.setMoney(0);
+        b1.setSex('男');
+        b1.setPhone("110110");
+        b1.setAddress("火星6号2B二层");
+        b1.setShopName("甜甜圈国际影城");
+        ALL_USERS.add(b1);
         // 注意，商家一定需要加入到店铺排片信息中去
         List<Movie> movies1 = new ArrayList<>();
-        ALL_MOVIES.put(b , movies1); // b = []
+        ALL_MOVIES.put(b1 , movies1); // b = []
 
         Business b2 = new Business();
         b2.setLoginName("baozupo888");
@@ -67,6 +67,6 @@ public class MovieSystem {
         ALL_MOVIES.put(b2 , movies2); // b2 = []
     }
     public static void main(String[] args) {
-        ALL_USERS
+        ALL_USERS;
     }
 }
